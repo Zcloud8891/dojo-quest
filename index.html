@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a1224">
+<meta name="color-scheme" content="dark">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dojo Quest">
+<title>Dojo Quest</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='28' fill='%230a1224'/%3E%3Ccircle cx='64' cy='54' r='26' fill='none' stroke='%23e6c36a' stroke-width='6' stroke-linecap='round' stroke-dasharray='132 32' transform='rotate(-30 64 54)'/%3E%3Crect x='36' y='92' width='56' height='12' rx='6' fill='%23e6c36a'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+:root {
+  --bg: #0a1224;
+  --card: #152238;
+  --ink: #f6f1e6;
+  --muted: #a7b3c6;
+  --gold: #e6c36a;
+  --line: rgba(230, 195, 106, 0.22);
+  --sans: -apple-system, BlinkMacSystemFont, Inter, "Segoe UI", sans-serif;
+  --serif: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, "Liberation Serif", serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-bottom: 108px; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background:
+    radial-gradient(900px 420px at 50% -10%, rgba(230, 195, 106, 0.14), transparent 55%),
+    var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.35;
+  overscroll-behavior: none;
+}
+button, input, select { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+#app {
+  width: min(480px, 100%);
+  margin: 0 auto;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
+}
+header {
+  padding: calc(14px + env(safe-area-inset-top)) 16px 8px;
+}
+.brand { display: flex; gap: 12px; align-items: center; }
+.enso { color: var(--gold); flex: none; }
+.brand-name {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.date { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+.pill.belt { background: var(--b); color: var(--bt); border: 1px solid rgba(230, 195, 106, 0.8); }
+.pill.streak { background: rgba(230, 195, 106, 0.12); color: var(--gold); border: 1px solid var(--line); }
+main { padding: 6px 16px 12px; }
+h1 {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.rule { width: 48px; height: 2px; margin: 8px 0 12px; background: var(--gold); border: 0; }
+.lede { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
+h2 {
+  margin: 12px 0 6px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+}
+.list { display: flex; flex-direction: column; gap: 6px; }
+.quest-row { display: flex; gap: 8px; align-items: stretch; }
+.quest {
+  flex: 1;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 10px 12px;
+}
+.quest:active { transform: scale(0.985); }
+.quest.done {
+  border-color: rgba(230, 195, 106, 0.72);
+  background: linear-gradient(180deg, rgba(230, 195, 106, 0.16), var(--card));
+  box-shadow: inset 3px 0 0 var(--gold);
+}
+.quest.carry {
+  background: transparent;
+  border-style: dashed;
+}
+.quest.carry .q-name { color: #d9d3c4; }
+.quest.carry.done { background: linear-gradient(180deg, rgba(230, 195, 106, 0.16), var(--card)); border-style: solid; }
+.check {
+  width: 28px; height: 28px; flex: none;
+  border: 2px solid var(--gold); border-radius: 50%;
+  display: grid; place-items: center; color: #1c1604;
+}
+.quest.done .check { background: var(--gold); }
+.q-body { flex: 1; min-width: 0; }
+.q-name { display: block; font-weight: 650; font-size: 16.5px; }
+.q-reward { display: block; margin-top: 2px; color: var(--muted); font-size: 13.5px; }
+.q-xp { color: var(--gold); font-size: 12px; font-weight: 750; letter-spacing: 0.04em; }
+.side-btn, .dismiss {
+  min-width: 72px;
+  min-height: 48px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+.banner, .note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(230, 195, 106, 0.08);
+  color: var(--muted);
+  font-size: 14px;
+}
+.form { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+label.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted); }
+input, select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  font-size: 16px;
+  background: #0c172b;
+  border: 1px solid rgba(230, 195, 106, 0.35);
+  border-radius: 12px;
+}
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 52px;
+  border-radius: 14px;
+  border: 1px solid rgba(230, 195, 106, 0.55);
+  color: var(--gold);
+  font-weight: 700;
+}
+.btn.solid { background: var(--gold); color: #1c1604; border-color: var(--gold); }
+.btn.danger { border-color: rgba(224, 160, 144, 0.7); color: #f0c2b6; }
+.panel { margin-top: 14px; }
+.panel p { color: var(--muted); font-size: 15px; }
+.medal {
+  width: 112px; height: 112px; margin: 2px auto 8px;
+  border-radius: 50%;
+  border: 8px solid var(--b, var(--gold));
+  display: grid; place-items: center; align-content: center;
+  box-shadow: 0 0 0 1px rgba(230, 195, 106, 0.45);
+  text-align: center;
+}
+.medal strong { font-family: var(--serif); font-size: 24px; font-weight: 600; line-height: 1; }
+.medal em { font-style: normal; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; font-size: 11px; }
+.xp-line { text-align: center; margin: 0; font-weight: 700; }
+.xp-num { text-align: center; margin: 6px 0 0; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.track { height: 8px; border-radius: 99px; background: #0c172b; overflow: hidden; margin: 8px 0; }
+.track > span { display: block; height: 100%; background: linear-gradient(90deg, #a8883d, var(--gold)); border-radius: inherit; }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px; min-height: 84px; }
+.tile b { display: block; font-family: var(--serif); font-size: 28px; font-weight: 600; line-height: 1; }
+.tile span, .stat-top span { color: var(--muted); font-size: 13px; }
+.stat { margin: 0 0 7px; }
+.stat-top { display: flex; justify-content: space-between; align-items: baseline; }
+.stat-top strong { font-variant-numeric: tabular-nums; color: var(--gold); }
+.timeline { list-style: none; margin: 0; padding: 0; }
+.timeline li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; position: relative; padding-bottom: 14px; }
+.timeline li::before {
+  content: ""; position: absolute; left: 7px; top: 16px; bottom: 0; width: 2px; background: rgba(230, 195, 106, 0.25);
+}
+.timeline li:last-child::before { display: none; }
+.dot { width: 16px; height: 16px; border-radius: 50%; margin-top: 3px; border: 2px solid rgba(230, 195, 106, 0.5); background: #0a1224; }
+.timeline .earned .dot { border-color: transparent; }
+.timeline strong { display: block; }
+.timeline em { font-style: normal; color: var(--muted); font-size: 14px; }
+.timeline .ahead { opacity: 0.72; }
+.err { color: #f0c2b6; font-size: 14px; min-height: 0; }
+nav.tabbar {
+  position: fixed; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: min(480px, 100%);
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  background: rgba(10, 18, 36, 0.94);
+  border-top: 1px solid var(--line);
+  z-index: 20;
+}
+nav.tabbar button {
+  min-height: 52px;
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+}
+nav.tabbar button[aria-current="page"] { color: var(--gold); background: rgba(230, 195, 106, 0.1); }
+#floaters { position: fixed; inset: 0; pointer-events: none; z-index: 30; }
+.floater {
+  position: fixed; z-index: 30; pointer-events: none;
+  font-weight: 800; color: #f3d78a;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65);
+  animation: floatUp 1000ms ease-out forwards;
+}
+@keyframes floatUp {
+  0% { opacity: 0; transform: translate(-50%, 8px); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -68px); }
+}
+.celebrate, .modal {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: calc(24px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+  background: rgba(6, 10, 18, 0.94);
+}
+.modal { z-index: 40; }
+.celebrate[hidden], .modal[hidden] { display: none !important; }
+.celebrate-card, .sheet {
+  position: relative; z-index: 1;
+  width: min(100%, 360px);
+  background: #101a2c;
+  border: 2px solid var(--belt, var(--gold));
+  border-radius: 28px;
+  padding: 28px 20px 20px;
+  text-align: center;
+}
+.sheet { border-color: var(--line); text-align: left; }
+.sheet h2, .celebrate-card h2 { letter-spacing: 0; text-transform: none; font-family: var(--serif); font-size: 40px; margin: 8px 0; color: var(--ink); }
+.swatch { height: 14px; border-radius: 99px; margin: 8px auto 0; width: 72%; border: 1px solid rgba(230, 195, 106, 0.8); }
+.confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.confetti i {
+  position: absolute; top: -16px; border-radius: 2px; opacity: 0.95;
+  animation: fall linear forwards;
+}
+@keyframes fall {
+  to { transform: translateY(105vh) rotate(220deg); }
+}
+.sheet .btn { margin-top: 8px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;
+}
+body.locked { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  .floater, .confetti i, .quest:active { animation: none; transform: none; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="floaters" aria-hidden="true"></div>
+<div id="celebrate" class="celebrate" hidden></div>
+<div id="modal" class="modal" hidden></div>
+<div id="live" class="sr-only" aria-live="polite"></div>
+<noscript><p class="banner">Dojo Quest needs JavaScript. Everything it remembers stays on this device.</p></noscript>
+<script>
+const KEY = 'dojo-quest.v1';
+const STAT_KEYS = ['strength', 'endurance', 'mobility', 'mind', 'rest', 'vitality'];
+const STAT_LABEL = {
+  strength: 'Strength', endurance: 'Endurance', mobility: 'Mobility',
+  mind: 'Mind', rest: 'Rest', vitality: 'Vitality',
+};
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/*
+ * Belt XP (mains only; side quests add bonus XP and do not change these targets).
+ *
+ * Each main quest awards 10 XP. All 5 mains = 50 XP per day.
+ *
+ * Yellow in about 7 days:  7 * 50 = 350 XP.
+ * Black in about 6 months: 180 * 50 = 9,000 XP. (180 days is about six months.)
+ *
+ * Cumulative XP. The gaps widen, so the first belt is close and black is far:
+ *
+ *   white       0
+ *   yellow    350    +350     (7 days)
+ *   orange   1050    +700     (14 days)
+ *   green    2250   +1200     (24 days)
+ *   blue     3750   +1500     (30 days)
+ *   purple   5500   +1750     (35 days)
+ *   brown    7250   +1750     (35 days)
+ *   black    9000   +1750     (35 days)
+ *
+ * 7 + 14 + 24 + 30 + 35 + 35 + 35 = 180 days.
+ * 350 + 700 + 1200 + 1500 + 1750 + 1750 + 1750 = 9000 XP.
+ *
+ * One quest is at most 10 XP, and the smallest gap is 350, so one tap cannot
+ * skip a belt.
+ */
+const BELTS = [
+  { id: 'white', name: 'White', xp: 0, color: '#f4f1ea', ink: '#1c1914' },
+  { id: 'yellow', name: 'Yellow', xp: 350, color: '#f0d15a', ink: '#1c1604' },
+  { id: 'orange', name: 'Orange', xp: 1050, color: '#e08a2c', ink: '#1c1004' },
+  { id: 'green', name: 'Green', xp: 2250, color: '#2f8f55', ink: '#f4fff7' },
+  { id: 'blue', name: 'Blue', xp: 3750, color: '#2f6fbe', ink: '#f3f7ff' },
+  { id: 'purple', name: 'Purple', xp: 5500, color: '#7d52b3', ink: '#f8f4ff' },
+  { id: 'brown', name: 'Brown', xp: 7250, color: '#8a5530', ink: '#fff6ee' },
+  { id: 'black', name: 'Black', xp: 9000, color: '#161616', ink: '#f6f1e4' },
+];
+const BELT_COPY = {
+  yellow: 'The belt turns yellow. Show up again tomorrow.',
+  orange: 'Orange belt. You came back often enough for it to show.',
+  green: 'Green belt. The practice has roots.',
+  blue: 'Blue belt. Steady work, worn openly.',
+  purple: 'Purple belt. You stayed when it got quiet.',
+  brown: 'Brown belt. The basics answer to you.',
+  black: 'Black belt. The path does not end here.',
+};
+const MAINS = [
+  { id: 'sleep', name: 'Sleep 7+ hrs', xp: 10, rewards: [{ stat: 'rest', n: 2 }, { stat: 'vitality', n: 1 }] },
+  { id: 'train', name: 'Run or train', xp: 10, rewards: [{ stat: 'endurance', n: 2 }, { stat: 'strength', n: 1 }] },
+  { id: 'water', name: 'Water', xp: 10, rewards: [{ stat: 'vitality', n: 2 }] },
+  { id: 'meal', name: 'A real meal', xp: 10, rewards: [{ stat: 'strength', n: 1 }, { stat: 'vitality', n: 1 }] },
+  { id: 'dojo', name: 'One Dojo work block', xp: 10, rewards: [{ stat: 'mind', n: 2 }, { stat: 'endurance', n: 1 }] },
+];
+const DEFAULT_SIDES = [
+  { id: 'stretch', name: '5 min stretching', xp: 4, rewards: [{ stat: 'mobility', n: 2 }], custom: false },
+  { id: 'kids', name: 'Walk with the kids', xp: 4, rewards: [{ stat: 'endurance', n: 1 }, { stat: 'mind', n: 1 }], custom: false },
+  { id: 'phone', name: 'No phone after 10 PM', xp: 4, rewards: [{ stat: 'rest', n: 1 }, { stat: 'mind', n: 1 }], custom: false },
+  { id: 'mobility', name: 'Mobility work', xp: 4, rewards: [{ stat: 'mobility', n: 2 }], custom: false },
+  { id: 'outside', name: '10 min outside', xp: 4, rewards: [{ stat: 'vitality', n: 1 }, { stat: 'endurance', n: 1 }], custom: false },
+];
+
+let state;
+let view = 'today';
+let modal = null;
+let importError = '';
+let sideError = '';
+let memoryOnly = false;
+let justDoneKey = null;
+let clockFreeze = null;
+
+function parseISO(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+function formatISO(dt) {
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, '0');
+  const day = String(dt.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+function isISODate(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const dt = parseISO(value);
+  return formatISO(dt) === value;
+}
+/* Calendar addition. setDate follows the civil calendar, including DST. */
+function addDays(iso, n) {
+  const dt = parseISO(iso);
+  dt.setDate(dt.getDate() + n);
+  return formatISO(dt);
+}
+function daysBetween(a, b) {
+  const da = parseISO(a);
+  const db = parseISO(b);
+  const ua = Date.UTC(da.getFullYear(), da.getMonth(), da.getDate());
+  const ub = Date.UTC(db.getFullYear(), db.getMonth(), db.getDate());
+  return Math.round((ub - ua) / 86400000);
+}
+/* ISO week, Monday–Sunday, computed from the civil date (not UTC midnight). */
+function weekKey(iso) {
+  const tmp = parseISO(iso);
+  const dayNr = (tmp.getDay() + 6) % 7;
+  tmp.setDate(tmp.getDate() - dayNr + 3);
+  const isoYear = tmp.getFullYear();
+  const firstThursday = new Date(isoYear, 0, 4);
+  const firstDayNr = (firstThursday.getDay() + 6) % 7;
+  firstThursday.setDate(firstThursday.getDate() - firstDayNr + 3);
+  const week = 1 + Math.round((tmp - firstThursday) / 604800000);
+  return isoYear + '-W' + String(week).padStart(2, '0');
+}
+function formatLong(iso) {
+  const dt = parseISO(iso);
+  return WEEKDAYS[dt.getDay()] + ', ' + MONTHS[dt.getMonth()] + ' ' + dt.getDate();
+}
+function formatShort(iso) {
+  const dt = parseISO(iso);
+  return MONTHS[dt.getMonth()] + ' ' + dt.getDate() + ', ' + dt.getFullYear();
+}
+function formatWeekday(iso) {
+  const dt = parseISO(iso);
+  return WEEKDAYS[dt.getDay()].slice(0, 3) + ', ' + MONTHS[dt.getMonth()] + ' ' + dt.getDate();
+}
+function realToday() {
+  return clockFreeze || formatISO(new Date());
+}
+function rewardText(rewards) {
+  return rewards.map((r) => '+' + r.n + ' ' + STAT_LABEL[r.stat]).join(', ');
+}
+function zeroStats() {
+  return { strength: 0, endurance: 0, mobility: 0, mind: 0, rest: 0, vitality: 0 };
+}
+function beltIndexForXp(xp) {
+  let idx = 0;
+  while (idx < BELTS.length - 1 && xp >= BELTS[idx + 1].xp) idx += 1;
+  return idx;
+}
+function beltById(id) {
+  return BELTS.find((b) => b.id === id) || BELTS[0];
+}
+function currentBelt() {
+  return BELTS[state.beltIndex] || BELTS[0];
+}
+function copyQuestList(list) {
+  return list.map((q) => ({
+    id: q.id, name: q.name, xp: q.xp,
+    rewards: q.rewards.map((r) => ({ stat: r.stat, n: r.n })),
+    custom: !!q.custom,
+  }));
+}
+function blankState(date) {
+  return {
+    v: 1,
+    xp: 0,
+    stats: zeroStats(),
+    beltIndex: 0,
+    beltHistory: [{ id: 'white', date: date }],
+    streak: 0,
+    openDate: date,
+    done: {},
+    carry: [],
+    restWeek: null,
+    restUsedOn: null,
+    sides: copyQuestList(DEFAULT_SIDES),
+  };
+}
+function cleanRewards(list) {
+  if (!Array.isArray(list) || !list.length || list.length > 4) return null;
+  const out = [];
+  for (const r of list) {
+    if (!r || !STAT_KEYS.includes(r.stat)) return null;
+    if (!Number.isInteger(r.n) || r.n < 1 || r.n > 9) return null;
+    out.push({ stat: r.stat, n: r.n });
+  }
+  return out;
+}
+function normalize(data) {
+  if (!data || typeof data !== 'object' || data.v !== 1) return null;
+  if (!Number.isInteger(data.xp) || data.xp < 0 || data.xp > 1000000) return null;
+  if (!data.stats || typeof data.stats !== 'object') return null;
+  const stats = zeroStats();
+  for (const key of STAT_KEYS) {
+    if (!Number.isInteger(data.stats[key]) || data.stats[key] < 0 || data.stats[key] > 1000000) return null;
+    stats[key] = data.stats[key];
+  }
+  if (!isISODate(data.openDate)) return null;
+  if (!Number.isInteger(data.streak) || data.streak < 0 || data.streak > 100000) return null;
+  if (!Array.isArray(data.sides) || data.sides.length > 24) return null;
+  const sides = [];
+  const ids = new Set(MAINS.map((q) => q.id));
+  for (const side of data.sides) {
+    if (!side || typeof side.id !== 'string' || typeof side.name !== 'string') return null;
+    if (!/^[a-z0-9-]{1,40}$/i.test(side.id) || ids.has(side.id)) return null;
+    const name = side.name.trim().replace(/\s+/g, ' ').slice(0, 40);
+    if (!name) return null;
+    if (!Number.isInteger(side.xp) || side.xp < 0 || side.xp > 50) return null;
+    const rewards = cleanRewards(side.rewards);
+    if (!rewards) return null;
+    ids.add(side.id);
+    sides.push({ id: side.id, name, xp: side.xp, rewards, custom: !!side.custom });
+  }
+  const known = new Set([...MAINS.map((q) => q.id), ...sides.map((s) => s.id)]);
+  const done = {};
+  if (!data.done || typeof data.done !== 'object' || Array.isArray(data.done)) return null;
+  for (const id of Object.keys(data.done)) {
+    if (data.done[id] === true && known.has(id)) done[id] = true;
+  }
+  if (!Array.isArray(data.carry) || data.carry.length > 40) return null;
+  const carry = [];
+  const carryIds = new Set();
+  for (const item of data.carry) {
+    if (!item || typeof item.id !== 'string' || typeof item.name !== 'string') return null;
+    if (carryIds.has(item.id) || item.id.length > 80) return null;
+    const rewards = cleanRewards(item.rewards);
+    if (!rewards) return null;
+    if (!Number.isInteger(item.xp) || item.xp < 0 || item.xp > 50) return null;
+    const name = item.name.trim().slice(0, 40);
+    if (!name) return null;
+    carryIds.add(item.id);
+    carry.push({
+      id: item.id,
+      questId: typeof item.questId === 'string' ? item.questId.slice(0, 40) : '',
+      name,
+      xp: item.xp,
+      rewards,
+      done: item.done === true,
+    });
+  }
+  if (!Array.isArray(data.beltHistory)) return null;
+  const beltHistory = [];
+  const seenBelts = new Set();
+  for (const entry of data.beltHistory) {
+    if (!entry || !BELTS.some((b) => b.id === entry.id) || !isISODate(entry.date)) return null;
+    if (seenBelts.has(entry.id)) return null;
+    seenBelts.add(entry.id);
+    beltHistory.push({ id: entry.id, date: entry.date });
+  }
+  if (!seenBelts.has('white')) beltHistory.unshift({ id: 'white', date: data.openDate });
+  beltHistory.sort((a, b) => BELTS.findIndex((x) => x.id === a.id) - BELTS.findIndex((x) => x.id === b.id));
+  let restUsedOn = null;
+  let restWeek = null;
+  if (data.restUsedOn != null) {
+    if (!isISODate(data.restUsedOn)) return null;
+    restUsedOn = data.restUsedOn;
+    restWeek = weekKey(restUsedOn);
+  }
+  return {
+    v: 1, xp: data.xp, stats, beltIndex: beltIndexForXp(data.xp), beltHistory,
+    streak: data.streak, openDate: data.openDate, done, carry, restWeek, restUsedOn, sides,
+  };
+}
+function allQuests() {
+  return MAINS.concat(state.sides);
+}
+function findQuest(id) {
+  return allQuests().find((q) => q.id === id) || null;
+}
+function mainsDoneCount() {
+  return MAINS.reduce((n, q) => n + (state.done[q.id] ? 1 : 0), 0);
+}
+function shownStreak() {
+  return state.streak + (mainsDoneCount() >= 4 ? 1 : 0);
+}
+function passUsedOnWeek(date) {
+  return !!(state.restUsedOn && state.restWeek === weekKey(date));
+}
+
+/*
+ * Close the open day, then move the calendar forward one civil day.
+ * CloseDay in verify/DojoQuest.tla is this step, with one main worth 1 model XP.
+ *
+ * A day counts toward the streak at 4 of 5 mains.
+ * A miss never lowers stats or XP.
+ * One rest-day pass per ISO week (Monday–Sunday) covers a miss only when a
+ * streak is already alive. The covered day does not add to the streak.
+ * The pass is chosen from the day being closed, before openDate moves.
+ * Yesterday's unfinished quests replace any older carry. They do not stack.
+ */
+function advanceOneDay() {
+  const date = state.openDate;
+  const mainsDone = mainsDoneCount();
+  const week = weekKey(date);
+  let result = 'qualified';
+  if (mainsDone >= 4) {
+    state.streak += 1;
+  } else if (state.streak > 0 && !passUsedOnWeek(date)) {
+    state.restWeek = week;
+    state.restUsedOn = date;
+    result = 'covered';
+  } else {
+    state.streak = 0;
+    result = 'missed';
+  }
+  state.carry = snapshotUnfinished(date);
+  state.done = {};
+  state.openDate = addDays(date, 1);
+  return { date, mainsDone, result };
+}
+function snapshotUnfinished(date) {
+  const items = [];
+  for (const quest of allQuests()) {
+    if (state.done[quest.id]) continue;
+    items.push({
+      id: 'carry-' + quest.id + '-' + date,
+      questId: quest.id,
+      name: quest.name,
+      xp: quest.xp,
+      rewards: quest.rewards.map((r) => ({ stat: r.stat, n: r.n })),
+      done: false,
+    });
+  }
+  return items;
+}
+function catchUpTo(target) {
+  const closed = [];
+  let guard = 0;
+  while (state.openDate < target && guard < 4000) {
+    const step = advanceOneDay();
+    closed.push(step);
+    guard += 1;
+  }
+  return closed;
+}
+function syncBelt(celebrate) {
+  const next = beltIndexForXp(state.xp);
+  const prev = state.beltIndex;
+  state.beltIndex = next;
+  const keep = new Set(BELTS.slice(0, next + 1).map((b) => b.id));
+  state.beltHistory = state.beltHistory.filter((h) => keep.has(h.id));
+  for (let i = 0; i <= next; i++) {
+    if (!state.beltHistory.some((h) => h.id === BELTS[i].id)) {
+      state.beltHistory.push({ id: BELTS[i].id, date: state.openDate });
+    }
+  }
+  state.beltHistory.sort((a, b) => BELTS.findIndex((x) => x.id === a.id) - BELTS.findIndex((x) => x.id === b.id));
+  if (celebrate && next > prev) openCelebration(BELTS[next]);
+  if (next < prev) closeCelebration();
+}
+/* One grant or one revoke. Toggle on, off, and on again nets a single grant. */
+function applyReward(quest, sign) {
+  for (const reward of quest.rewards) state.stats[reward.stat] += sign * reward.n;
+  state.xp += sign * quest.xp;
+  syncBelt(sign > 0);
+}
+function toggleQuest(id, rect) {
+  const quest = findQuest(id);
+  if (!quest) return;
+  if (state.done[id]) {
+    delete state.done[id];
+    applyReward(quest, -1);
+    announce(quest.name + ' unmarked.');
+  } else {
+    state.done[id] = true;
+    applyReward(quest, 1);
+    justDoneKey = id;
+    if (rect) spawnFloaters(quest.rewards, rect);
+    announce(quest.name + ' complete. ' + rewardText(quest.rewards) + '.');
+  }
+  save();
+  render();
+}
+function toggleCarry(id, rect) {
+  const item = state.carry.find((c) => c.id === id);
+  if (!item) return;
+  item.done = !item.done;
+  applyReward(item, item.done ? 1 : -1);
+  if (item.done) {
+    justDoneKey = id;
+    if (rect) spawnFloaters(item.rewards, rect);
+    announce(item.name + ' credited. ' + rewardText(item.rewards) + '.');
+  } else {
+    announce(item.name + ' credit removed.');
+  }
+  save();
+  render();
+}
+function dismissCarry(id) {
+  const item = state.carry.find((c) => c.id === id);
+  if (!item || item.done) return;
+  state.carry = state.carry.filter((c) => c.id !== id);
+  announce(item.name + ' dismissed.');
+  save();
+  render();
+}
+function addSide(name, stat) {
+  name = String(name || '').trim().replace(/\s+/g, ' ').slice(0, 40);
+  if (!name) {
+    sideError = 'Name the side quest first.';
+    render();
+    return;
+  }
+  if (!STAT_KEYS.includes(stat)) return;
+  if (state.sides.length >= 24) {
+    sideError = 'The dojo keeps at most 24 side quests.';
+    render();
+    return;
+  }
+  sideError = '';
+  state.sides.push({
+    id: 'side-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    name,
+    xp: 4,
+    rewards: [{ stat: stat, n: 1 }],
+    custom: true,
+  });
+  save();
+  render();
+}
+function removeSide(id) {
+  const quest = state.sides.find((s) => s.id === id);
+  if (!quest) return;
+  if (state.done[id]) {
+    delete state.done[id];
+    applyReward(quest, -1);
+  }
+  for (const item of state.carry) {
+    if (item.questId === id && item.done) applyReward(item, -1);
+  }
+  state.carry = state.carry.filter((c) => c.questId !== id);
+  state.sides = state.sides.filter((s) => s.id !== id);
+  save();
+  render();
+}
+function replaceState(next, catchUp) {
+  state = next;
+  syncBelt(false);
+  closeCelebration();
+  if (catchUp && state.openDate < realToday()) catchUpTo(realToday());
+  importError = '';
+  view = 'today';
+  save();
+  render();
+}
+function resetState() {
+  clockFreeze = null;
+  state = blankState(realToday());
+  modal = null;
+  importError = '';
+  sideError = '';
+  view = 'today';
+  closeCelebration();
+  save();
+  render();
+}
+
+function save() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+    memoryOnly = false;
+  } catch (err) {
+    memoryOnly = true;
+  }
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return null;
+    return normalize(JSON.parse(raw));
+  } catch (err) {
+    return null;
+  }
+}
+
+function esc(value) {
+  return String(value).replace(/[&<>"']/g, (ch) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[ch]));
+}
+function announce(text) {
+  const live = document.getElementById('live');
+  if (live) live.textContent = text;
+}
+function spawnFloaters(rewards, rect) {
+  const host = document.getElementById('floaters');
+  const x = rect.left + Math.min(rect.width * 0.55, 180);
+  rewards.forEach((reward, i) => {
+    const el = document.createElement('div');
+    el.className = 'floater';
+    el.dataset.floater = reward.stat;
+    el.textContent = '+' + reward.n + ' ' + STAT_LABEL[reward.stat];
+    el.style.left = x + 'px';
+    el.style.top = (rect.top + 8 + i * 22) + 'px';
+    host.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  });
+}
+function openCelebration(belt) {
+  const el = document.getElementById('celebrate');
+  el.hidden = false;
+  el.style.setProperty('--belt', belt.color);
+  el.setAttribute('role', 'dialog');
+  el.setAttribute('aria-modal', 'true');
+  el.setAttribute('aria-labelledby', 'celebrate-title');
+  const bits = [belt.color, '#e6c36a', '#f6f1e6', '#fff4cc'];
+  let confetti = '';
+  for (let i = 0; i < 42; i++) {
+    const left = Math.random() * 100;
+    const delay = (Math.random() * 0.35).toFixed(2);
+    const dur = (1.6 + Math.random() * 1.3).toFixed(2);
+    const w = 6 + Math.round(Math.random() * 6);
+    const h = 8 + Math.round(Math.random() * 8);
+    confetti += '<i style="left:' + left.toFixed(1) + '%;animation-delay:' + delay + 's;animation-duration:' + dur + 's;background:' + bits[i % bits.length] + ';width:' + w + 'px;height:' + h + 'px"></i>';
+  }
+  el.innerHTML =
+    '<div class="confetti" aria-hidden="true">' + confetti + '</div>' +
+    '<div class="celebrate-card">' +
+      '<p class="brand-name">New belt</p>' +
+      '<div class="swatch" style="background:' + belt.color + '"></div>' +
+      '<h2 id="celebrate-title">' + esc(belt.name) + ' belt</h2>' +
+      '<p>' + esc(BELT_COPY[belt.id] || 'A new belt.') + '</p>' +
+      '<button class="btn solid" type="button" data-action="close-celebration">Continue</button>' +
+    '</div>';
+  document.body.classList.add('locked');
+  const button = el.querySelector('button');
+  if (button) button.focus();
+}
+function closeCelebration() {
+  const el = document.getElementById('celebrate');
+  if (!el) return;
+  el.hidden = true;
+  el.innerHTML = '';
+  if (modal !== 'reset') document.body.classList.remove('locked');
+}
+function streakPhrase(n) {
+  return n === 1 ? '1-day streak' : n + '-day streak';
+}
+function icon(name) {
+  const common = 'viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"';
+  if (name === 'today') return '<svg ' + common + '><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M4.8 4.8l1.4 1.4M17.8 17.8l1.4 1.4M19.2 4.8l-1.4 1.4M6.2 17.8l-1.4 1.4"/></svg>';
+  if (name === 'sheet') return '<svg ' + common + '><circle cx="12" cy="8" r="3"/><path d="M5 19c1.4-3 3.6-4.5 7-4.5S17.6 16 19 19"/></svg>';
+  if (name === 'belts') return '<svg ' + common + '><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+  return '<svg ' + common + '><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="8" cy="7" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="10" cy="17" r="1.4" fill="currentColor" stroke="none"/></svg>';
+}
+function questButton(quest, opts) {
+  const done = !!opts.done;
+  const carry = !!opts.carry;
+  const pop = justDoneKey === (opts.key || quest.id) ? ' pop' : '';
+  const reward = carry && !done
+    ? 'could have been: ' + rewardText(quest.rewards)
+    : rewardText(quest.rewards);
+  const action = carry ? 'carry' : 'toggle';
+  const attr = carry ? ' data-carry="' + esc(quest.id) + '"' : ' data-quest="' + esc(quest.id) + '"';
+  return '<button type="button" class="quest' + (done ? ' done' : '') + (carry ? ' carry' : '') + pop + '" data-action="' + action + '"' + attr + ' aria-pressed="' + (done ? 'true' : 'false') + '">' +
+    '<span class="check" aria-hidden="true">' + (done ? '<svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7.2 5.2 10.5 12 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' : '') + '</span>' +
+    '<span class="q-body"><span class="q-name">' + esc(quest.name) + '</span><span class="q-reward">' + esc(reward) + '</span></span>' +
+    '<span class="q-xp">' + quest.xp + ' XP</span></button>';
+}
+function renderToday() {
+  const doneMains = mainsDoneCount();
+  const openCarry = state.carry.filter((c) => !c.done);
+  let html = '<p class="lede">' + doneMains + ' of 5 mains. 4 seals the streak.</p>';
+  if (memoryOnly) html += '<p class="banner">This browser is not saving on this device. Progress will vanish if you close the tab.</p>';
+  if (state.carry.length) {
+    html += '<h2>From yesterday</h2><p class="lede">Credit them today, or dismiss. No penalty.</p><div class="list">';
+    for (const item of state.carry) {
+      html += '<div class="quest-row">' + questButton(item, { done: item.done, carry: true, key: item.id });
+      if (!item.done) html += '<button type="button" class="dismiss" data-action="dismiss-carry" data-dismiss="' + esc(item.id) + '">Dismiss</button>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+  html += '<h2>Main quests</h2><div class="list">';
+  for (const quest of MAINS) html += questButton(quest, { done: !!state.done[quest.id] });
+  html += '</div><h2>Side quests</h2><p class="lede">Bonus XP. Add your own, or remove one you do not use.</p>';
+  if (!state.sides.length) html += '<p class="note">No side quests yet.</p>';
+  html += '<div class="list">';
+  for (const quest of state.sides) {
+    html += '<div class="quest-row">' + questButton(quest, { done: !!state.done[quest.id] }) +
+      '<button type="button" class="side-btn" data-action="remove-side" data-remove="' + esc(quest.id) + '">Remove</button></div>';
+  }
+  html += '</div><form class="form" data-add-side><label class="field">Side quest<input name="name" maxlength="40" placeholder="Name a side quest" autocomplete="off"></label>' +
+    '<label class="field">Trains<select name="stat">' +
+    STAT_KEYS.map((key) => '<option value="' + key + '">' + STAT_LABEL[key] + '</option>').join('') +
+    '</select></label><p class="err">' + esc(sideError) + '</p><button class="btn solid" type="submit">Add side quest</button></form>';
+  return html;
+}
+function renderSheet() {
+  const belt = currentBelt();
+  const next = BELTS[state.beltIndex + 1];
+  const floor = belt.xp;
+  const span = next ? next.xp - floor : 1;
+  const into = state.xp - floor;
+  const pct = next ? Math.max(0, Math.min(100, Math.round(into / span * 100))) : 100;
+  const week = weekKey(state.openDate);
+  const passHere = state.restWeek === week && state.restUsedOn;
+  let html = '<div class="medal" style="--b:' + belt.color + '"><strong>' + esc(belt.name) + '</strong><em>belt</em></div>';
+  if (next) {
+    html += '<p class="xp-line">' + (next.xp - state.xp).toLocaleString('en-US') + ' XP to ' + esc(next.name) + '</p>';
+    html += '<div class="track" aria-hidden="true"><span style="width:' + pct + '%"></span></div>';
+    html += '<p class="xp-num">' + state.xp.toLocaleString('en-US') + ' / ' + next.xp.toLocaleString('en-US') + ' XP</p>';
+  } else {
+    html += '<p class="xp-line">Black belt. The path stays open.</p>';
+    html += '<div class="track" aria-hidden="true"><span style="width:100%"></span></div>';
+    html += '<p class="xp-num">' + state.xp.toLocaleString('en-US') + ' XP</p>';
+  }
+  html += '<div class="tiles"><div class="tile"><b data-streak-value="' + shownStreak() + '">' + shownStreak() + '</b><span>' + (shownStreak() === 1 ? 'day streak' : 'day streak') + '</span></div>';
+  html += '<div class="tile" data-rest="' + (passHere ? 'used' : 'ready') + '"><b style="font-size:22px">' + (passHere ? 'Used' : 'Ready') + '</b><span>' +
+    (passHere ? 'Rest pass · ' + esc(formatWeekday(state.restUsedOn)) : 'Rest pass this week') + '</span></div></div>';
+  for (const key of STAT_KEYS) {
+    const value = state.stats[key];
+    const width = Math.max(0, Math.min(100, Math.round(value / 50 * 100)));
+    html += '<div class="stat"><div class="stat-top"><span>' + STAT_LABEL[key] + '</span><strong>' + value + '</strong></div><div class="track" aria-hidden="true"><span style="width:' + width + '%"></span></div></div>';
+  }
+  html += '<p class="lede">4 of 5 mains seals a streak. One weekly pass covers a miss. Misses never lower a stat.</p>';
+  return html;
+}
+function renderBelts() {
+  let html = '<p class="lede">Belts you have tied, and the ones still ahead.</p><ol class="timeline">';
+  for (const belt of BELTS) {
+    const earned = state.beltHistory.find((h) => h.id === belt.id);
+    const ahead = !earned;
+    html += '<li class="' + (ahead ? 'ahead' : 'earned') + '"><i class="dot" style="background:' + (ahead ? 'transparent' : belt.color) + '"></i><div><strong>' +
+      esc(belt.name) + ' belt</strong><em>' +
+      (earned
+        ? esc(formatShort(earned.date)) + (belt.id === 'white' ? ' · Started' : '')
+        : (belt.xp - state.xp).toLocaleString('en-US') + ' XP to go') +
+      '</em></div></li>';
+  }
+  html += '</ol>';
+  return html;
+}
+function renderSettings() {
+  return '<p class="lede">Saved on this device only, under <span data-storage-key>' + KEY + '</span>. No account.</p>' +
+    '<div class="panel"><h2>Backup</h2><p>A JSON file of this dojo. Keep it wherever you keep your own notes.</p>' +
+    '<button class="btn" type="button" data-action="export">Export backup</button>' +
+    '<label class="btn" style="margin-top:8px">Import backup<input type="file" accept="application/json,.json" hidden></label>' +
+    '<p class="err" id="import-error">' + esc(importError) + '</p></div>' +
+    '<div class="panel"><h2>Reset</h2><p>Erases stats, belts, the streak, and custom side quests on this device.</p>' +
+    '<button class="btn danger" type="button" data-action="ask-reset">Reset dojo</button></div>';
+}
+function renderModal() {
+  const root = document.getElementById('modal');
+  if (modal !== 'reset') {
+    root.hidden = true;
+    root.innerHTML = '';
+    if (document.getElementById('celebrate').hidden) document.body.classList.remove('locked');
+    return;
+  }
+  root.hidden = false;
+  document.body.classList.add('locked');
+  root.innerHTML = '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="reset-title">' +
+    '<h2 id="reset-title">Reset the dojo?</h2>' +
+    '<p>This clears every quest, stat, and belt on this device. It cannot be undone.</p>' +
+    '<button class="btn danger" type="button" data-action="confirm-reset">Erase everything</button>' +
+    '<button class="btn" type="button" data-action="cancel-reset">Keep my progress</button></div>';
+}
+function render() {
+  const belt = currentBelt();
+  const titles = { today: 'Today', sheet: 'Character sheet', belts: 'Belt history', settings: 'Settings' };
+  document.title = 'Dojo Quest · ' + titles[view];
+  const popKey = justDoneKey;
+  const app = document.getElementById('app');
+  app.innerHTML =
+    '<header><div class="brand"><svg class="enso" width="36" height="36" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="116 24" transform="rotate(-40 32 32)"/></svg>' +
+      '<div><p class="brand-name">Dojo Quest</p><p class="date" data-open-date="' + esc(state.openDate) + '">' + esc(formatLong(state.openDate)) + '</p></div></div>' +
+      '<div class="pills"><span class="pill belt" data-belt="' + belt.id + '" style="--b:' + belt.color + ';--bt:' + belt.ink + '">' + esc(belt.name) + ' belt</span>' +
+      '<span class="pill streak" data-streak="' + shownStreak() + '">' + streakPhrase(shownStreak()) + '</span></div></header>' +
+    '<main data-screen="' + view + '"><h1>' + titles[view] + '</h1><div class="rule"></div>' +
+      (view === 'today' ? renderToday() : view === 'sheet' ? renderSheet() : view === 'belts' ? renderBelts() : renderSettings()) +
+    '</main>' +
+    '<nav class="tabbar" aria-label="Sections">' +
+      [['today', 'Today', 'today'], ['sheet', 'Sheet', 'sheet'], ['belts', 'Belts', 'belts'], ['settings', 'Settings', 'settings']].map(([id, label, ic]) =>
+        '<button type="button" data-action="view" data-view="' + id + '"' + (view === id ? ' aria-current="page"' : '') + ' aria-label="' + titles[id] + '">' + icon(ic) + '<span>' + label + '</span></button>'
+      ).join('') +
+    '</nav>';
+  justDoneKey = null;
+  renderModal();
+  if (popKey && !document.getElementById('celebrate').hidden) {
+    /* celebration owns the screen; the quest list stays underneath */
+  }
+}
+function exportBackup() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'dojo-quest-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+function importFile(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    let data;
+    try { data = JSON.parse(String(reader.result)); }
+    catch (err) { importError = 'That file is not JSON.'; render(); return; }
+    const next = normalize(data);
+    if (!next) { importError = 'That file is not a Dojo Quest backup.'; render(); return; }
+    importError = '';
+    replaceState(next, true);
+  };
+  reader.onerror = () => { importError = 'Could not read that file.'; render(); };
+  reader.readAsText(file);
+}
+function onClick(event) {
+  const el = event.target.closest('[data-action]');
+  if (!el) return;
+  const action = el.dataset.action;
+  if (action === 'view') {
+    view = el.dataset.view;
+    sideError = '';
+    render();
+    window.scrollTo(0, 0);
+    return;
+  }
+  if (action === 'toggle') {
+    toggleQuest(el.dataset.quest, el.getBoundingClientRect());
+    return;
+  }
+  if (action === 'carry') {
+    toggleCarry(el.dataset.carry, el.getBoundingClientRect());
+    return;
+  }
+  if (action === 'dismiss-carry') {
+    dismissCarry(el.dataset.dismiss);
+    return;
+  }
+  if (action === 'remove-side') {
+    removeSide(el.dataset.remove);
+    return;
+  }
+  if (action === 'export') exportBackup();
+  if (action === 'ask-reset') { modal = 'reset'; render(); }
+  if (action === 'cancel-reset') { modal = null; render(); }
+  if (action === 'confirm-reset') resetState();
+  if (action === 'close-celebration') closeCelebration();
+}
+function onSubmit(event) {
+  const form = event.target.closest('[data-add-side]');
+  if (!form) return;
+  event.preventDefault();
+  const data = new FormData(form);
+  addSide(data.get('name'), data.get('stat'));
+}
+function onChange(event) {
+  const input = event.target;
+  if (!input.matches || !input.matches('input[type="file"]')) return;
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (file) importFile(file);
+}
+function catchUpClock() {
+  const today = realToday();
+  if (state.openDate < today) {
+    catchUpTo(today);
+    save();
+    render();
+  }
+}
+function boot() {
+  state = load() || blankState(realToday());
+  syncBelt(false);
+  if (state.openDate < realToday()) catchUpTo(realToday());
+  save();
+  document.body.addEventListener('click', onClick);
+  document.body.addEventListener('submit', onSubmit);
+  document.body.addEventListener('change', onChange);
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    if (!document.getElementById('celebrate').hidden) closeCelebration();
+    else if (modal) { modal = null; render(); }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') catchUpClock();
+  });
+  window.addEventListener('focus', catchUpClock);
+  window.addEventListener('pageshow', catchUpClock);
+  setInterval(catchUpClock, 60000);
+  render();
+  window.__dq = {
+    ready: true,
+    KEY,
+    advanceDay(n) {
+      const count = Math.max(1, Math.min(800, n | 0 || 1));
+      const closed = [];
+      for (let i = 0; i < count; i++) closed.push(advanceOneDay());
+      save();
+      render();
+      return { openDate: state.openDate, closed };
+    },
+    catchUpTo(iso) {
+      const closed = catchUpTo(iso);
+      save();
+      render();
+      return closed;
+    },
+    getState() { return JSON.parse(JSON.stringify(state)); },
+    exportData() { return JSON.parse(JSON.stringify(state)); },
+    importData(data) {
+      const next = normalize(data);
+      if (!next) return { ok: false };
+      replaceState(next, true);
+      return { ok: true, state: JSON.parse(JSON.stringify(state)) };
+    },
+    debugLoad(data) {
+      const next = normalize(data);
+      if (!next) return { ok: false };
+      replaceState(next, false);
+      return { ok: true };
+    },
+    reset() { resetState(); return JSON.parse(JSON.stringify(state)); },
+    addDays, weekKey, daysBetween, beltIndexForXp, rewardText,
+    belts() { return BELTS.map((b) => ({ id: b.id, xp: b.xp })); },
+    freezeClock(iso) { clockFreeze = iso; },
+    clearClock() { clockFreeze = null; },
+  };
+}
+boot();
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
